@@ -64,7 +64,7 @@ class SiteController extends Controller
         $products_ids = [];
 
         if (!empty($get)) {
-            $products_ids = $get[$dishesProductsModel->formName()];
+            $products_ids = $get[$dishesProductsModel->formName()] ?? [];
         }
 
         $searchModel = new DishesSearch();
