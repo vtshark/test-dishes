@@ -76,7 +76,7 @@ class DishProductsController extends Controller
         $products = Products::find()->asArray()->all();
 
         foreach ($products as $id => &$product) {
-            $product['checked'] = ($ids[$product['id']]) ? true : false;
+            $product['checked'] = isset($ids[$product['id']]) ? true : false;
         }
 
         return $this->render('/dishes/products_list_update',
