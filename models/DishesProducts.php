@@ -50,19 +50,4 @@ class DishesProducts extends \yii\db\ActiveRecord
         ];
     }
 
-//    /**
-//     * @return \yii\db\ActiveQuery
-//     */
-//    public function getDish()
-//    {
-//        return $this->hasOne(Dishes::className(), ['id' => 'dish_id']);
-//    }
-//
-//    /**
-//     * @return \yii\db\ActiveQuery
-//     */
-//    public function getProduct()
-//    {
-//        return $this->hasOne(Products::className(), ['id' => 'product_id']);
-//    }
 }

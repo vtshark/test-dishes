@@ -8,11 +8,29 @@ use app\models\DishesProducts;
 use app\models\Products;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 
 class DishProductsController extends Controller
 {
 
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ]
+        ];
+    }
+
     /**
+     * обновление списка продуктов в блюде
+     *
      * @param $dish_id
      * @return string|\yii\web\Response
      * @throws \yii\base\InvalidConfigException
@@ -29,13 +47,16 @@ class DishProductsController extends Controller
         if (Yii::$app->request->isPost) {
             $post = Yii::$app->request->post();
 
+            // определение продуктов, которые необходимо исключить из блюда
             $need_delete_products = [];
             foreach ($ids as $id => $arr) {
                 if (!isset($post[$formName][$id])) {
                     $need_delete_products[] = $id;
                 }
             }
+            DishesProducts::deleteAll(['product_id' => $need_delete_products]);
 
+            // добавление новых продуктов в блюдо
             if (count($post[$formName])) {
                 $add_products = array_keys($post[$formName]);
                 foreach ($add_products as $product_id) {
@@ -47,7 +68,6 @@ class DishProductsController extends Controller
                     }
                 }
             }
-            DishesProducts::deleteAll(['product_id' => $need_delete_products]);
 
             return $this->redirect(['dishes/view', 'id' => $dish_id]);
         }

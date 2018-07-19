@@ -75,6 +75,7 @@ class DishesSearch extends Dishes
      */
     public function searchByProductsIds($products_ids = [])
     {
+        // промежуточные преобразование массива c id искомых продуктов
         $arr = [];
         if (!empty($products_ids)) {
             $products_ids = array_keys($products_ids);
@@ -84,12 +85,14 @@ class DishesSearch extends Dishes
         }
         $products_ids = $arr;
 
+        // выборка блюд в которых есть хоть один из запрашиваемых продуктов
         $dishes_arr = DishesProducts::find()
             ->select(['dish_id'])
             ->where(['product_id' => $products_ids])
             ->asArray()
             ->all();
 
+        // определение id блюд у которых есть полный список запрашиваемых продуктов
         $arr = [];
         foreach ($dishes_arr as $item) {
             $dish = Dishes::find()->where(['id' => $item['dish_id']])

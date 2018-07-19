@@ -8,6 +8,14 @@ class Orders
 {
     const LIMIT = 2;
 
+    /**
+     * метод обновляет список заказов в кэше,
+     * и вызывает метод для добавления записи о заказе в кэш
+     *
+     * @param $id
+     * @param $cooking_time
+     * @return bool
+     */
     public function addToListOrders($id, $cooking_time)
     {
         $cache = Yii::$app->cache;
@@ -34,6 +42,8 @@ class Orders
     }
 
     /**
+     * добавление записи о заказе в кэш
+     *
      * @param $id
      * @param $cooking_time
      */
@@ -44,12 +54,22 @@ class Orders
         $cache->set('dish_' . $id, $time_exp, $cooking_time * 60);
     }
 
+    /**
+     * получение обновленного списка заказов
+     *
+     * @return array
+     */
     public function getList()
     {
         $list = self::refreshCacheList();
         return $list;
     }
 
+    /**
+     * обновление состяние списка заказов в кэше
+     * и возврат списка
+     * @return array
+     */
     public function refreshCacheList() {
         $list = [];
         $result_list = [];
@@ -75,6 +95,10 @@ class Orders
         return $result_list;
     }
 
+    /**
+     * выборка блюд на основе списка заказов
+     * @return array
+     */
     public function getDishes()
     {
         $arrOrders = $this->refreshCacheList();

@@ -7,13 +7,19 @@ use yii\helpers\Url;
     <div class="panel-heading">Фильтр блюд по продуктам</div>
     <?= Html::beginForm(Url::to(['site/index']), 'get', ['data-pjax' => '']); ?>
         <div class="panel-body">
-            <? foreach ($products as $product) : ?>
-                <span class="">
-                    <?= Html::checkbox($formName . '['. $product['id'] .']', $product['checked']) ?>
-                    <?= $product['name'] ?>
-                </span>
+            <? if (count($products)) : ?>
+                <? foreach ($products as $product) : ?>
+                    <span class="">
+                        <?= Html::checkbox($formName . '['. $product['id'] .']', $product['checked']) ?>
+                        <?= $product['name'] ?>
+                    </span>
+                <? endforeach; ?>
+            <? else : ?>
 
-            <? endforeach; ?>
+                <div class="alert alert-warning" role="alert">
+                    Необходимо добавить прдукты
+                </div>
+            <? endif; ?>
         </div>
         <div class="panel-footer">
             <?= Html::submitButton('Поиск', ['class' => 'btn btn-primary']) ?>
