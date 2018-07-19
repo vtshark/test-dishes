@@ -32,12 +32,6 @@ class SiteController extends Controller
                     ],
                 ],
             ],
-//            'verbs' => [
-//                'class' => VerbFilter::className(),
-//                'actions' => [
-//                    'logout' => ['post'],
-//                ],
-//            ],
         ];
     }
 
@@ -78,7 +72,7 @@ class SiteController extends Controller
         $dataProvider = $searchModel->searchByProductsIds($products_ids);
 
         foreach ($products as $id => &$product) {
-            $product['checked'] = ($products_ids[$product['id']]) ? true : false;
+            $product['checked'] = isset($products_ids[$product['id']]) ? true : false;
         }
 
         return $this->render('index', [
