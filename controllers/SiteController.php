@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\DishesProducts;
+use app\models\DishesSearch;
+use app\models\Products;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -29,12 +32,12 @@ class SiteController extends Controller
                     ],
                 ],
             ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],
+//            'verbs' => [
+//                'class' => VerbFilter::className(),
+//                'actions' => [
+//                    'logout' => ['post'],
+//                ],
+//            ],
         ];
     }
 
@@ -58,10 +61,32 @@ class SiteController extends Controller
      * Displays homepage.
      *
      * @return string
+     * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $get = Yii::$app->request->get();
+        $dishesProductsModel = new DishesProducts();
+        $products_ids = [];
+
+        if (!empty($get)) {
+            $products_ids = $get[$dishesProductsModel->formName()];
+        }
+
+        $searchModel = new DishesSearch();
+        $products = Products::find()->asArray()->all();
+        $dataProvider = $searchModel->searchByProductsIds($products_ids);
+
+        foreach ($products as $id => &$product) {
+            $product['checked'] = ($products_ids[$product['id']]) ? true : false;
+        }
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'products' => $products,
+            'formName' => $dishesProductsModel->formName()
+        ]);
     }
 
     /**
@@ -96,33 +121,5 @@ class SiteController extends Controller
         Yii::$app->user->logout();
 
         return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return Response|string
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
-            Yii::$app->session->setFlash('contactFormSubmitted');
-
-            return $this->refresh();
-        }
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return string
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
     }
 }

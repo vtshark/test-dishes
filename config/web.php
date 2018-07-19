@@ -15,6 +15,7 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '-mF4UU5DmHahTGOCdG6-pC51rn8wK5L4',
+            'baseUrl' => '',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -43,14 +44,21 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'backend/dish-products/update/<dish_id:\d+>' => 'backend/dish-products/update',
+                'dishes/view/<id:\d+>' => 'dishes/view',
+                'dishes/order/<id:\d+>' => 'dishes/order',
             ],
         ],
-        */
+    ],
+    'modules' => [
+        'backend' => [
+            'class' => 'app\modules\backend\Backend',
+        ],
     ],
     'params' => $params,
 ];
